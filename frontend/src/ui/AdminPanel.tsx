@@ -201,7 +201,7 @@ export function AdminPanel() {
       {tabBar}
       <div style={s.wrap}>
       <div style={s.header}>
-        <h2 style={{ margin: 0, fontSize: 18 }}>Agents</h2>
+        <h2 style={{ margin: 0, fontSize: 18, color: "#f1f5f9" }}>Agents</h2>
         <button style={s.primary} onClick={startCreate}>
           + New agent
         </button>
@@ -253,7 +253,7 @@ export function AdminPanel() {
 
       {editing && (
         <div style={s.form}>
-          <h3 style={{ marginTop: 0 }}>{isNew ? "New agent" : `Edit ${editing.agentId}`}</h3>
+          <h3 style={{ marginTop: 0, color: "#f1f5f9" }}>{isNew ? "New agent" : `Edit ${editing.agentId}`}</h3>
           <label style={s.label}>
             Agent ID
             <input
@@ -304,7 +304,7 @@ export function AdminPanel() {
               </select>
             </label>
           </div>
-          <label style={{ display: "flex", gap: 8, alignItems: "center", margin: "8px 0" }}>
+          <label style={{ display: "flex", gap: 8, alignItems: "center", margin: "8px 0", color: "#e2e8f0", fontSize: 14 }}>
             <input
               type="checkbox"
               checked={kbEnabled}
@@ -319,18 +319,18 @@ export function AdminPanel() {
 
           <div
             style={{
-              background: "#f8fafc",
-              border: "1px solid #e2e8f0",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: 12,
               padding: 14,
               margin: "10px 0",
             }}
           >
-            <h4 style={{ margin: "0 0 8px" }}>Tools (function calling)</h4>
+            <h4 style={{ margin: "0 0 8px", color: "#e2e8f0" }}>Tools (function calling)</h4>
             {TOOLS.map((t) => (
               <label
                 key={t.name}
-                style={{ display: "flex", gap: 8, alignItems: "flex-start", margin: "6px 0" }}
+                style={{ display: "flex", gap: 8, alignItems: "flex-start", margin: "6px 0", color: "#e2e8f0", fontSize: 14 }}
               >
                 <input
                   type="checkbox"
@@ -349,7 +349,7 @@ export function AdminPanel() {
             ))}
           </div>
 
-          <label style={{ display: "flex", gap: 8, alignItems: "center", margin: "8px 0" }}>
+          <label style={{ display: "flex", gap: 8, alignItems: "center", margin: "8px 0", color: "#e2e8f0", fontSize: 14 }}>
             <input
               type="checkbox"
               checked={editing.rememberConversations ?? false}
@@ -360,15 +360,15 @@ export function AdminPanel() {
 
           <div
             style={{
-              background: "#f8fafc",
-              border: "1px solid #e2e8f0",
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
               borderRadius: 12,
               padding: 14,
               margin: "10px 0",
             }}
           >
-            <h4 style={{ margin: "0 0 4px" }}>Access (groups)</h4>
-            <p style={{ opacity: 0.6, fontSize: 12, margin: "0 0 8px" }}>
+            <h4 style={{ margin: "0 0 4px", color: "#f1f5f9" }}>Access (groups)</h4>
+            <p style={{ color: "#64748b", fontSize: 12, margin: "0 0 8px" }}>
               Leave empty to allow everyone. Select groups to restrict who can
               use this agent.
             </p>
@@ -386,7 +386,7 @@ export function AdminPanel() {
                     style={
                       groupAllowed(g.name)
                         ? { background: "#3b82f6", color: "#fff", border: 0, borderRadius: 999, padding: "4px 12px", cursor: "pointer", fontSize: 13 }
-                        : { background: "#e2e8f0", color: "#334155", border: 0, borderRadius: 999, padding: "4px 12px", cursor: "pointer", fontSize: 13 }
+                        : { background: "#1e293b", color: "#94a3b8", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 999, padding: "4px 12px", cursor: "pointer", fontSize: 13 }
                     }
                   >
                     {g.name}
@@ -396,7 +396,7 @@ export function AdminPanel() {
             )}
           </div>
 
-          <label style={{ display: "flex", gap: 8, alignItems: "center", margin: "8px 0" }}>
+          <label style={{ display: "flex", gap: 8, alignItems: "center", margin: "8px 0", color: "#e2e8f0", fontSize: 14 }}>
             <input
               type="checkbox"
               checked={editing.enabled}
@@ -420,17 +420,17 @@ export function AdminPanel() {
 }
 
 const s: Record<string, React.CSSProperties> = {
-  wrap: { background: "#f8fafc", borderRadius: 16, padding: 20 },
+  wrap: { background: "rgba(15,23,42,0.75)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 20 },
   header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
-  table: { width: "100%", borderCollapse: "collapse", fontSize: 14 },
-  th: { textAlign: "left", borderBottom: "2px solid #e2e8f0", padding: "8px 6px", opacity: 0.7 },
-  td: { borderBottom: "1px solid #eef2f7", padding: "8px 6px" },
-  form: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: 16, marginTop: 16 },
-  label: { display: "flex", flexDirection: "column", gap: 4, fontSize: 13, marginBottom: 10, opacity: 0.9 },
-  input: { border: "1px solid #cbd5e1", borderRadius: 8, padding: "8px 10px", fontSize: 14 },
+  table: { width: "100%", borderCollapse: "collapse", fontSize: 14, color: "#e2e8f0" },
+  th: { textAlign: "left", borderBottom: "2px solid rgba(255,255,255,0.08)", padding: "8px 6px", color: "#64748b" },
+  td: { borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "8px 6px", color: "#e2e8f0" },
+  form: { background: "rgba(10,22,40,0.9)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: 16, marginTop: 16 },
+  label: { display: "flex", flexDirection: "column", gap: 4, fontSize: 13, marginBottom: 10, color: "#94a3b8" },
+  input: { background: "#1e293b", border: "1px solid #334155", borderRadius: 8, padding: "8px 10px", fontSize: 14, color: "#f1f5f9" },
   primary: { background: "#3b82f6", color: "#fff", border: 0, borderRadius: 10, padding: "8px 16px", cursor: "pointer" },
-  ghost: { background: "transparent", border: "1px solid #cbd5e1", borderRadius: 10, padding: "8px 16px", cursor: "pointer" },
-  small: { background: "#e2e8f0", border: 0, borderRadius: 8, padding: "4px 10px", cursor: "pointer", fontSize: 13 },
-  smallDanger: { background: "#fee2e2", color: "#b91c1c", border: 0, borderRadius: 8, padding: "4px 10px", cursor: "pointer", fontSize: 13 },
-  error: { color: "#b91c1c", background: "#fee2e2", padding: "8px 12px", borderRadius: 8 },
+  ghost: { background: "transparent", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "8px 16px", cursor: "pointer", color: "#94a3b8" },
+  small: { background: "#1e293b", color: "#94a3b8", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, padding: "4px 10px", cursor: "pointer", fontSize: 13 },
+  smallDanger: { background: "rgba(239,68,68,0.15)", color: "#fca5a5", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 8, padding: "4px 10px", cursor: "pointer", fontSize: 13 },
+  error: { color: "#fca5a5", background: "rgba(239,68,68,0.15)", padding: "8px 12px", borderRadius: 8 },
 };

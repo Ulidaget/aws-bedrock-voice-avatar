@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { config, VoiceStateName } from "./config";
 import { VoiceClient } from "./voice/VoiceClient";
-import { AvatarStage } from "./ui/AvatarStage";
+import { AgentAvatar } from "./ui/AgentAvatar";
 import { AdminPanel } from "./ui/AdminPanel";
 import { MyConversations } from "./ui/MyConversations";
+import { LoginPage } from "./ui/LoginPage";
 import { adminApi } from "./admin/adminApi";
 
 // C10-B: voices the end user can pick (language-specific in Nova Sonic).
@@ -56,6 +57,7 @@ export default function App() {
   const [voiceId, setVoiceId] = useState<string>(
     () => localStorage.getItem(VOICE_KEY) ?? ""
   );
+  const [textInput, setTextInput] = useState("");
   const clientRef = useRef<VoiceClient | null>(null);
   const admin = isAdmin();
 
@@ -128,27 +130,24 @@ export default function App() {
 
   const handleInterrupt = useCallback(() => client.interrupt(), [client]);
 
+  const handleSendText = useCallback(() => {
+    const text = textInput.trim();
+    if (!text) return;
+    setTranscript((prev) => [...prev, { role: "USER", text }]);
+    setTextInput("");
+    if (connected) client.sendText(text);
+  }, [textInput, connected, client]);
+
   if (!authed) {
-    return (
-      <div style={styles.centered}>
-        <h1>Phase 0 — Voice + Avatar POC</h1>
-        <p>Please sign in to start a voice session.</p>
-        <button style={styles.primary} onClick={login}>
-          Sign in
-        </button>
-        {isAuthDisabled() && (
-          <p style={{ opacity: 0.6, marginTop: 12 }}>
-            (Auth is disabled for local dev — you can start directly.)
-          </p>
-        )}
-      </div>
-    );
+    return <LoginPage onLogin={login} />;
   }
 
   return (
     <div style={styles.app}>
+      <style>{`body { margin: 0; }`}</style>
+      <div style={styles.inner}>
       <header style={styles.header}>
-        <h1 style={{ fontSize: 20, margin: 0 }}>Phase 0 — Voice + Avatar POC</h1>
+        <h1 style={{ fontSize: 20, margin: 0, color: "#f1f5f9", fontWeight: 600 }}>Your AI Voice Assistant</h1>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {!connected && (
             <button
@@ -185,7 +184,7 @@ export default function App() {
       ) : (
       <main style={styles.main}>
         <section style={styles.avatarPanel}>
-          <AvatarStage state={state} amplitude={amplitude} />
+          <AgentAvatar state={state} amplitude={amplitude} />
           <div style={styles.statusRow}>
             <span style={{ ...styles.badge, ...badgeColor(state) }}>{STATE_LABEL[state]}</span>
           </div>
@@ -250,23 +249,40 @@ export default function App() {
         </section>
 
         <section style={styles.transcriptPanel}>
-          <h2 style={{ fontSize: 16 }}>Transcript</h2>
+          <h2 style={{ fontSize: 16, color: "#e2e8f0", margin: "0 0 12px" }}>Transcript</h2>
           <div style={styles.transcript}>
             {transcript.length === 0 && (
-              <p style={{ opacity: 0.5 }}>Transcript will appear here…</p>
+              <p style={{ color: "#475569" }}>Transcript will appear here…</p>
             )}
             {transcript.map((line, i) => (
               <div key={i} style={{ marginBottom: 8 }}>
-                <strong style={{ opacity: 0.7 }}>
+                <strong style={{ color: "#64748b" }}>
                   {line.role === "USER" ? "You" : "Assistant"}:
                 </strong>{" "}
-                {line.text}
+                <span style={{ color: "#e2e8f0" }}>{line.text}</span>
               </div>
             ))}
+          </div>
+          <div style={styles.textInputRow}>
+            <input
+              style={styles.textInput}
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSendText()}
+              placeholder="O escribe un mensaje…"
+            />
+            <button
+              style={styles.sendBtn}
+              onClick={handleSendText}
+              disabled={!textInput.trim()}
+            >
+              Enviar
+            </button>
           </div>
         </section>
       </main>
       )}
+      </div>
     </div>
   );
 }
@@ -284,23 +300,26 @@ function badgeColor(state: VoiceStateName) {
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  app: { maxWidth: 1000, margin: "0 auto", padding: 24, fontFamily: "system-ui, sans-serif" },
-  header: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  main: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginTop: 16 },
-  avatarPanel: { background: "#0f172a", borderRadius: 16, padding: 16, color: "#fff" },
-  transcriptPanel: { background: "#f8fafc", borderRadius: 16, padding: 16, minHeight: 360 },
+  app: { minHeight: "100vh", background: "linear-gradient(145deg, #060d1f 0%, #0f172a 55%, #080f20 100%)", fontFamily: "system-ui, -apple-system, sans-serif" },
+  inner: { maxWidth: 1000, margin: "0 auto", padding: 24 },
+  header: { display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(15,23,42,0.85)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: "14px 20px", marginBottom: 24 },
+  main: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 },
+  avatarPanel: { background: "rgba(10,22,40,0.9)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 16, color: "#fff" },
+  transcriptPanel: { background: "rgba(15,23,42,0.75)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 16, padding: 16, minHeight: 360 },
   transcript: { maxHeight: 340, overflowY: "auto" },
   statusRow: { display: "flex", justifyContent: "center", marginTop: 12 },
   badge: { color: "#fff", padding: "4px 12px", borderRadius: 999, fontSize: 13 },
   agentRow: { display: "flex", gap: 8, justifyContent: "center", alignItems: "center", marginTop: 14 },
-  agentLabel: { fontSize: 13, opacity: 0.7 },
+  agentLabel: { fontSize: 13, color: "#94a3b8" },
   agentSelect: { background: "#1e293b", color: "#fff", border: "1px solid #334155", borderRadius: 8, padding: "6px 10px", fontSize: 14 },
   controls: { display: "flex", gap: 8, justifyContent: "center", marginTop: 16 },
   primary: { background: "#3b82f6", color: "#fff", border: 0, borderRadius: 10, padding: "10px 18px", cursor: "pointer", fontSize: 15 },
   warn: { background: "#f59e0b", color: "#fff", border: 0, borderRadius: 10, padding: "10px 18px", cursor: "pointer" },
   danger: { background: "#ef4444", color: "#fff", border: 0, borderRadius: 10, padding: "10px 18px", cursor: "pointer" },
-  ghost: { background: "transparent", border: "1px solid #cbd5e1", borderRadius: 10, padding: "6px 12px", cursor: "pointer" },
+  ghost: { background: "transparent", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 10, padding: "6px 12px", cursor: "pointer", color: "#94a3b8" },
   error: { color: "#fca5a5", textAlign: "center", marginTop: 12 },
-  hint: { opacity: 0.6, fontSize: 13, textAlign: "center", marginTop: 12 },
-  centered: { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", gap: 8, fontFamily: "system-ui, sans-serif" },
+  hint: { color: "#64748b", fontSize: 13, textAlign: "center", marginTop: 12 },
+  textInputRow: { display: "flex", gap: 8, marginTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 12 },
+  textInput: { flex: 1, background: "#1e293b", border: "1px solid #334155", borderRadius: 8, padding: "8px 12px", fontSize: 14, color: "#f1f5f9", outline: "none" },
+  sendBtn: { background: "#3b82f6", color: "#fff", border: 0, borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 14, flexShrink: 0 },
 };

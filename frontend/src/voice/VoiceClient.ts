@@ -77,6 +77,10 @@ export class VoiceClient {
     this.send({ type: "interrupt" });
   }
 
+  sendText(text: string): void {
+    this.send({ type: "text", text });
+  }
+
   async disconnect(): Promise<void> {
     this.send({ type: "stop" });
     this.teardown();

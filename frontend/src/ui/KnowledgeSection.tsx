@@ -96,7 +96,7 @@ export function KnowledgeSection({
     return (
       <div style={box}>
         <h4 style={{ margin: "0 0 6px" }}>Knowledge base</h4>
-        <p style={{ opacity: 0.7, fontSize: 13, margin: 0 }}>
+        <p style={{ color: "#64748b", fontSize: 13, margin: 0 }}>
           Save the agent first, then reopen it to upload documents.
         </p>
       </div>
@@ -106,7 +106,7 @@ export function KnowledgeSection({
   return (
     <div style={box}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h4 style={{ margin: 0 }}>Knowledge base documents</h4>
+        <h4 style={{ margin: 0, color: "#f1f5f9" }}>Knowledge base documents</h4>
         <div style={{ display: "flex", gap: 8 }}>
           <button
             type="button"
@@ -133,9 +133,9 @@ export function KnowledgeSection({
       {notice && <p style={noticeBox}>{notice}</p>}
 
       {loading ? (
-        <p style={{ opacity: 0.6, fontSize: 13 }}>Loading documents…</p>
+        <p style={{ color: "#64748b", fontSize: 13 }}>Loading documents…</p>
       ) : docs.length === 0 ? (
-        <p style={{ opacity: 0.6, fontSize: 13 }}>
+        <p style={{ color: "#64748b", fontSize: 13 }}>
           No documents yet. Upload a file, then re-index.
         </p>
       ) : (
@@ -165,18 +165,20 @@ export function KnowledgeSection({
 }
 
 const box: React.CSSProperties = {
-  background: "#f8fafc",
-  border: "1px solid #e2e8f0",
+  background: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: 12,
   padding: 14,
   margin: "10px 0",
+  color: "#e2e8f0",
 };
 const row: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   padding: "6px 0",
-  borderBottom: "1px solid #eef2f7",
+  borderBottom: "1px solid rgba(255,255,255,0.06)",
   fontSize: 14,
+  color: "#e2e8f0",
 };
 const primary: React.CSSProperties = {
   background: "#3b82f6",
@@ -189,31 +191,32 @@ const primary: React.CSSProperties = {
 };
 const ghost: React.CSSProperties = {
   background: "transparent",
-  border: "1px solid #cbd5e1",
+  border: "1px solid rgba(255,255,255,0.15)",
   borderRadius: 8,
   padding: "6px 12px",
   cursor: "pointer",
   fontSize: 13,
+  color: "#94a3b8",
 };
 const smallDanger: React.CSSProperties = {
-  background: "#fee2e2",
-  color: "#b91c1c",
-  border: 0,
+  background: "rgba(239,68,68,0.15)",
+  color: "#fca5a5",
+  border: "1px solid rgba(239,68,68,0.3)",
   borderRadius: 8,
   padding: "4px 10px",
   cursor: "pointer",
   fontSize: 13,
 };
 const errBox: React.CSSProperties = {
-  color: "#b91c1c",
-  background: "#fee2e2",
+  color: "#fca5a5",
+  background: "rgba(239,68,68,0.15)",
   padding: "6px 10px",
   borderRadius: 8,
   fontSize: 13,
 };
 const noticeBox: React.CSSProperties = {
-  color: "#065f46",
-  background: "#d1fae5",
+  color: "#86efac",
+  background: "rgba(34,197,94,0.12)",
   padding: "6px 10px",
   borderRadius: 8,
   fontSize: 13,

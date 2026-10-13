@@ -1,0 +1,50 @@
+.background-customizable {
+  background-color: #060d1f;
+}
+.banner-customizable {
+  background-color: #0f172a;
+  padding: 20px 0px;
+}
+.textDescription-customizable {
+  color: #e2e8f0;
+  font-size: 18px;
+  font-weight: 600;
+}
+.label-customizable {
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 14px;
+}
+.inputField-customizable {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #f1f5f9;
+}
+.inputField-customizable:focus {
+  border-color: #3b82f6;
+  background-color: #1e293b;
+  outline: none;
+}
+.submitButton-customizable {
+  background-color: #3b82f6;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.submitButton-customizable:hover {
+  background-color: #2563eb;
+}
+.errorMessage-customizable {
+  color: #fca5a5;
+}
+.idpButton-customizable {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  color: #f1f5f9;
+}
+.idpButton-customizable:hover {
+  background-color: #334155;
+}

@@ -57,6 +57,55 @@ export class AuthStack extends cdk.Stack {
       },
     });
 
+    // Dark-theme CSS for the Cognito Hosted UI.
+    new cognito.CfnUserPoolUICustomizationAttachment(this, "HostedUiCss", {
+      userPoolId: this.userPool.userPoolId,
+      clientId: "ALL",
+      css: `
+        .background-customizable {
+          background: linear-gradient(145deg, #060d1f, #0f172a);
+        }
+        .modal-content {
+          background-color: #0f172a;
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 16px;
+          box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+        }
+        .banner-customizable { background-color: transparent; }
+        .textDescription-customizable {
+          color: #e2e8f0;
+          font-size: 18px;
+          font-weight: 600;
+        }
+        .label-customizable {
+          color: #94a3b8;
+          font-weight: 500;
+          font-size: 14px;
+        }
+        .inputField-customizable {
+          background-color: #1e293b;
+          border: 1px solid #334155;
+          border-radius: 8px;
+          color: #f1f5f9;
+        }
+        .inputField-customizable:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+          background-color: #1e293b;
+        }
+        .submitButton-customizable {
+          background-color: #3b82f6;
+          border: none;
+          border-radius: 10px;
+          font-size: 15px;
+          font-weight: 600;
+        }
+        .submitButton-customizable:hover { background-color: #2563eb; }
+        .forgotPassword a, a { color: #3b82f6; }
+        .errorMessage-customizable { color: #fca5a5; }
+      `,
+    });
+
     // C2: admin group. Members may mutate agents via the admin API.
     new cognito.CfnUserPoolGroup(this, "AdminGroup", {
       userPoolId: this.userPool.userPoolId,
