@@ -1,0 +1,23 @@
+# WebSocket server (>=14 uses the asyncio.server API with single-arg handler)
+websockets>=14.0
+
+# Cognito JWT validation
+python-jose[cryptography]>=3.3.0
+httpx>=0.27.0
+
+# Amazon Nova Sonic bidirectional streaming (experimental AWS SDK)
+# See: https://docs.aws.amazon.com/nova/latest/nova2-userguide/sonic-getting-started.html
+# Bidirectional (duplex) streaming REQUIRES the CRT transport (awscrt);
+# the default aiohttp transport does not support duplex event streams.
+aws-sdk-bedrock-runtime>=0.11.0
+smithy-aws-core>=0.11.0
+awscrt>=0.23.0
+
+# Container (ECS/Fargate) credential provider for the smithy credential chain.
+# Without this, the task role is NOT picked up on Fargate and Bedrock calls
+# fail silently (the SDK warns: "EcsContainer credential source was detected
+# but no provider claims it; install 'aws-credentials-http'").
+aws-credentials-http>=0.1.0
+
+# DynamoDB access for the multi-agent config store (C1).
+boto3>=1.34.0

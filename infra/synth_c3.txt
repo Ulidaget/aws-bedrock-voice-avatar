@@ -1,0 +1,7 @@
+WARNING No cross-stack-reference strength configured, defaulting to "strong". We recommend you set feature flag "@aws-cdk/core:defaultCrossStackReferences" to "both", then deploy everywhere, then set it to "weak". Alternatively, set it to "strong" explicitly to lock in the current producer-protecting behavior. (See: https://github.com/aws/aws-cdk/blob/main/packages/aws-cdk-lib/README.md#reference-strength) (Construct Annotations)
+   Phase0-dev-Backend
+   Acknowledge with 'Construct-Annotations::@aws-cdk/core:crossStackReferencesDefaultStrong'
+Successfully synthesized to d:\HONNE-ONEDRIVE-UMRA\OneDrive - GRUPO HONNEXS SA DE CV\AWS-BEDROCK-CHAT\phase0-voice-avatar-poc\infra\cdk.out
+Supply a stack id (Phase0-dev-Network, Phase0-dev-Auth, Phase0-dev-Data, Phase0-dev-Backend, Phase0-dev-Admin, Phase0-dev-Frontend, Phase0-dev-Observability) to display its template.
+77 feature flags are not configured. Run 'cdk flags --unstable=flags' to learn more.
+SYNTHEXIT=0 

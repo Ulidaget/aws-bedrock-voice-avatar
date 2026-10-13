@@ -1,0 +1,4 @@
+        "dynamodb:PutItem",
+   "Type": "AWS::Lambda::Function",
+   "Type": "AWS::ApiGatewayV2::Api",
+   "Type": "AWS::ApiGatewayV2::Authorizer",

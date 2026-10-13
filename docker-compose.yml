@@ -1,0 +1,29 @@
+# Local dev: runs the backend voice proxy against real Bedrock (Nova 2 Sonic).
+# The frontend runs separately with `npm run dev` (Vite) at http://localhost:5173.
+#
+# Prereqs:
+#   - AWS credentials with Bedrock access exported in your shell
+#     (AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY / AWS_SESSION_TOKEN / AWS_REGION)
+#   - Nova 2 Sonic model access enabled in that account/region.
+#
+# Usage:  docker compose up --build
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"   # WebSocket
+      - "8081:8081"   # health
+    # Credentials come from the generated .env (written by start-local.cmd).
+    # env_file only injects the keys that are actually present, so a missing
+    # session token is never passed as an empty string (which would break
+    # SigV4 signing with UnrecognizedClientException).
+    env_file:
+      - .env
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8080"
+      BEDROCK_MODEL_ID: "amazon.nova-2-sonic-v1:0"
+      # LOCAL DEV ONLY — bypass Cognito JWT validation.
+      AUTH_DISABLED: "true"
+      ALLOWED_ORIGIN: "http://localhost:5173"
+      MAX_SESSION_SECONDS: "450"

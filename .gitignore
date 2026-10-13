@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+!.env.example
+
+# Builds
+dist/
+build/
+frontend/dist/
+*.tsbuildinfo
+
+# CDK
+infra/cdk.out/
+infra/cdk.context.json
+*.d.ts.map
+
+# Env / secrets
+.env
+.env.*.local
+*.pem
+*.key
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
