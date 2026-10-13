@@ -362,14 +362,32 @@ def _list_conversations(only_sub: str = ""):
         sk = it.get("sk", "")
         agent_id = sk.split("#", 1)[0] if "#" in sk else sk
         key = f"{user_sub}|{agent_id}"
-        entry = convos.get(key)
         created = it.get("createdAt", "")
+
+        # Stats items (written by session.py on close) carry token usage.
+        # SK pattern: {agentId}#stats#{sessionId}
+        is_stats = "#stats#" in sk
+        if is_stats:
+            entry = convos.setdefault(key, {
+                "userSub": user_sub, "agentId": agent_id,
+                "turns": 0, "lastActivity": created,
+                "inputTokens": 0, "outputTokens": 0,
+            })
+            entry["inputTokens"] = entry.get("inputTokens", 0) + int(it.get("inputTokens", 0))
+            entry["outputTokens"] = entry.get("outputTokens", 0) + int(it.get("outputTokens", 0))
+            if created > entry["lastActivity"]:
+                entry["lastActivity"] = created
+            continue
+
+        entry = convos.get(key)
         if entry is None:
             convos[key] = {
                 "userSub": user_sub,
                 "agentId": agent_id,
                 "turns": 1,
                 "lastActivity": created,
+                "inputTokens": 0,
+                "outputTokens": 0,
             }
         else:
             entry["turns"] += 1

@@ -43,6 +43,8 @@ export interface ConversationSummary {
   agentId: string;
   turns: number;
   lastActivity: string;
+  inputTokens?: number;
+  outputTokens?: number;
 }
 
 export interface ConversationTurn {

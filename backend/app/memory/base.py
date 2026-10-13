@@ -34,6 +34,17 @@ class MemoryProvider(ABC):
         """Persist the turns of a finished (or in-progress) session."""
         raise NotImplementedError
 
+    async def save_stats(
+        self,
+        user_sub: str,
+        agent_id: str,
+        session_id: str,
+        input_tokens: int,
+        output_tokens: int,
+    ) -> None:
+        """Persist token usage stats for a finished session. Default no-op."""
+        return None
+
 
 class NullMemoryProvider(MemoryProvider):
     """No-op provider when memory is disabled (backward compatible)."""

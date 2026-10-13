@@ -78,6 +78,9 @@ class Session:
         self._memory = memory or NullMemoryProvider()
         # Turns spoken during THIS session, flushed to memory on close.
         self._session_turns: list[Turn] = []
+        # Token estimates (text chars / 4). Includes system prompt overhead.
+        self._input_tokens: int = len(self._agent.system_prompt) // 4
+        self._output_tokens: int = 0
         # C5: per-session tool registry (built in start() from agent.tool_names).
         self._registry = None
         self._tool_tasks: set[asyncio.Task] = set()
@@ -243,6 +246,8 @@ class Session:
                 task.cancel()
             # C4: persist this session's turns for cross-session memory.
             await self._flush_memory()
+            # Always persist token usage stats regardless of rememberConversations.
+            await self._save_stats()
             self._metrics.closed()
             logger.info("session closed session=%s", self.session_id)
 
@@ -273,6 +278,18 @@ class Session:
             await self._provider.send_tool_result(
                 tool_use_id, {"error": str(exc)}, is_error=True
             )
+
+    async def _save_stats(self) -> None:
+        try:
+            await self._memory.save_stats(
+                self.user_sub,
+                self._agent.agent_id,
+                self.session_id,
+                self._input_tokens,
+                self._output_tokens,
+            )
+        except Exception:
+            logger.exception("save_stats failed session=%s", self.session_id)
 
     async def _flush_memory(self) -> None:
         if not (self._agent.remember_conversations and self._session_turns):
@@ -316,6 +333,12 @@ class Session:
             await self._send_text(
                 json.dumps({"type": "transcript", "role": ev.role, "text": ev.text})
             )
+            # Accumulate estimated token counts from text length (4 chars ≈ 1 token).
+            token_est = max(1, len(ev.text) // 4)
+            if ev.role == "USER":
+                self._input_tokens += token_est
+            else:
+                self._output_tokens += token_est
             # C4: accumulate turns for cross-session memory (flushed on close).
             if self._agent.remember_conversations and ev.role in ("USER", "ASSISTANT"):
                 self._session_turns.append(Turn(role=ev.role, text=ev.text))

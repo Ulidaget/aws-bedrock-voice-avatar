@@ -113,3 +113,43 @@ class DynamoMemoryProvider(MemoryProvider):
                 )
 
         await loop.run_in_executor(None, _write)
+
+    async def save_stats(
+        self,
+        user_sub: str,
+        agent_id: str,
+        session_id: str,
+        input_tokens: int,
+        output_tokens: int,
+    ) -> None:
+        """Write a single session-summary item with token usage counts."""
+        if not self._table_name or not user_sub or not agent_id:
+            return
+
+        loop = asyncio.get_running_loop()
+
+        def _write_stats() -> None:
+            from decimal import Decimal
+
+            now = datetime.now(timezone.utc)
+            ttl = int(time.time()) + self._ttl_days * 86400
+            try:
+                self._get_table().put_item(
+                    Item={
+                        "userSub": user_sub,
+                        # #stats# prefix distinguishes summary items from turn items.
+                        "sk": f"{agent_id}#stats#{session_id}",
+                        "sessionId": session_id,
+                        "inputTokens": Decimal(input_tokens),
+                        "outputTokens": Decimal(output_tokens),
+                        "createdAt": now.isoformat(),
+                        "ttl": ttl,
+                    }
+                )
+            except Exception:
+                logger.exception(
+                    "save_stats failed user=%s agent=%s session=%s",
+                    user_sub, agent_id, session_id,
+                )
+
+        await loop.run_in_executor(None, _write_stats)
