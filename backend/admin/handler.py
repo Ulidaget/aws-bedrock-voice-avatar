@@ -396,6 +396,24 @@ def _list_conversations(only_sub: str = ""):
     items = sorted(
         convos.values(), key=lambda c: c["lastActivity"], reverse=True
     )
+
+    # Enrich with email/name from Cognito (best-effort; never breaks the list).
+    if _cognito and USER_POOL_ID and items:
+        sub_to_email: dict = {}
+        try:
+            paginator = _cognito.get_paginator("list_users")
+            for page in paginator.paginate(UserPoolId=USER_POOL_ID, Limit=60):
+                for u in page.get("Users", []):
+                    attrs = u.get("Attributes", [])
+                    sub = _attr(attrs, "sub") or ""
+                    email = _attr(attrs, "email") or _attr(attrs, "name") or ""
+                    if sub:
+                        sub_to_email[sub] = email
+        except Exception:
+            pass
+        for item in items:
+            item["userEmail"] = sub_to_email.get(item["userSub"], "")
+
     return _resp(200, {"conversations": items})
 
 

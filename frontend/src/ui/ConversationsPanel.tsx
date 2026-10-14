@@ -80,7 +80,7 @@ export function ConversationsPanel() {
             ← Back to list
           </button>
           <h3 style={{ marginBottom: 4, color: "#f1f5f9" }}>
-            {selected.agentId} · {selected.userSub}
+            {selected.agentId} · {selected.userEmail || selected.userSub}
           </h3>
           {selected.inputTokens !== undefined && (
             <p style={{ color: "#64748b", fontSize: 13, margin: "0 0 12px" }}>
@@ -120,8 +120,11 @@ export function ConversationsPanel() {
             {list.map((c) => (
               <tr key={`${c.userSub}|${c.agentId}`}>
                 <td style={s.td}>{c.agentId}</td>
-                <td style={{ ...s.td, fontFamily: "monospace", fontSize: 12 }}>
-                  {c.userSub}
+                <td style={s.td} title={c.userSub}>
+                  {c.userEmail
+                    ? <span>{c.userEmail}</span>
+                    : <span style={{ fontFamily: "monospace", fontSize: 11, color: "#64748b" }}>{c.userSub.slice(0, 8)}…</span>
+                  }
                 </td>
                 <td style={s.td}>{c.turns}</td>
                 <td style={s.td}>

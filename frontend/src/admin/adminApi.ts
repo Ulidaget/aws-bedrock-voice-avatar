@@ -45,6 +45,7 @@ export interface ConversationSummary {
   lastActivity: string;
   inputTokens?: number;
   outputTokens?: number;
+  userEmail?: string;
 }
 
 export interface ConversationTurn {
