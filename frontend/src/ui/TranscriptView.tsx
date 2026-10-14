@@ -81,13 +81,15 @@ export function TranscriptView({ turns }: { turns: ConversationTurn[] }) {
                     <div
                       style={{
                         maxWidth: "75%",
-                        background: t.role === "USER" ? "#dbeafe" : "#f1f5f9",
+                        background: t.role === "USER" ? "rgba(59,130,246,0.2)" : "rgba(255,255,255,0.06)",
+                        border: `1px solid ${t.role === "USER" ? "rgba(59,130,246,0.3)" : "rgba(255,255,255,0.08)"}`,
                         borderRadius: 12,
                         padding: "8px 12px",
                         fontSize: 14,
+                        color: "#e2e8f0",
                       }}
                     >
-                      <div style={{ opacity: 0.55, fontSize: 11, marginBottom: 2 }}>
+                      <div style={{ color: "#64748b", fontSize: 11, marginBottom: 2 }}>
                         {t.role}
                         {t.createdAt
                           ? ` · ${new Date(t.createdAt).toLocaleTimeString()}`
@@ -111,11 +113,12 @@ const dayHeader: React.CSSProperties = {
   gap: 8,
   alignItems: "center",
   width: "100%",
-  background: "#eef2f7",
-  border: "1px solid #e2e8f0",
+  background: "rgba(255,255,255,0.05)",
+  border: "1px solid rgba(255,255,255,0.08)",
   borderRadius: 10,
   padding: "8px 12px",
   cursor: "pointer",
   fontSize: 14,
   fontWeight: 600,
+  color: "#e2e8f0",
 };
